@@ -126,11 +126,13 @@ promptshield_env/
   client.py
   env.py
   graders.py
+  inference.py
   models.py
   openenv.yaml
   pyproject.toml
   requirements.txt
   reward.py
+  scripts/
   tasks.py
   data/
   server/
@@ -197,6 +199,8 @@ Validate a running local server:
 
 ## Baseline Usage
 
+`baseline.py` is the deterministic local reference runner. It does not require an external model unless you explicitly choose `--mode openai`.
+
 Heuristic baseline, local in-process:
 
 ```powershell
@@ -236,6 +240,44 @@ cd promptshield_env
 .\.venv\Scripts\python.exe baseline.py --mode heuristic
 ```
 
+## Inference Runner
+
+`inference.py` is the competition submission runner. It uses an OpenAI-compatible client to drive the environment with a live model and emits structured `START`, `STEP`, and `END` logs.
+
+Required environment variables:
+
+- `API_BASE_URL`
+- `MODEL_NAME`
+- `HF_TOKEN`
+
+Optional environment variable:
+
+- `LOCAL_IMAGE_NAME`
+
+Run against the live Hugging Face Space with the default endpoint:
+
+```powershell
+$env:HF_TOKEN="your_hf_token"
+.\.venv\Scripts\python.exe inference.py
+```
+
+Run with an explicit API endpoint and model:
+
+```powershell
+$env:API_BASE_URL="https://router.huggingface.co/v1"
+$env:MODEL_NAME="openai/gpt-oss-120b:novita"
+$env:HF_TOKEN="your_hf_token"
+.\.venv\Scripts\python.exe inference.py
+```
+
+Run against a local Docker image instead of the live Space:
+
+```powershell
+$env:HF_TOKEN="your_hf_token"
+$env:LOCAL_IMAGE_NAME="promptshield-env"
+.\.venv\Scripts\python.exe inference.py
+```
+
 ## Additional Endpoints
 
 - `GET /tasks`
@@ -263,6 +305,12 @@ Run the container:
 
 ```powershell
 docker run -p 8000:8000 promptshield-env
+```
+
+Run the submission validator:
+
+```bash
+bash scripts/validate-submission.sh https://sindhujarao7-hf-promptshield-env.hf.space .
 ```
 
 ## Hugging Face Deployment
