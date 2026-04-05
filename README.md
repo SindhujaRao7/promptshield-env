@@ -142,27 +142,27 @@ promptshield_env/
 Recommended local setup uses a virtual environment.
 
 ```powershell
-cd C:\Users\raosi\Documents\Sindhuja_Work\RL_Scaler_Meta_Competition\promptshield_env
+cd promptshield_env
 py -3.13 -m venv .venv
-.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
 ```
 
 If `openenv` is not available after installation, install the runtime explicitly:
 
 ```powershell
-python -m pip install "openenv-core[core]>=0.2.3"
+.\.venv\Scripts\python.exe -m pip install "openenv-core[core]>=0.2.3"
 ```
+
+If you prefer activation, run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` in the current PowerShell window before `.\.venv\Scripts\Activate.ps1`.
 
 ## Local Run
 
 Run the API locally:
 
 ```powershell
-cd C:\Users\raosi\Documents\Sindhuja_Work\RL_Scaler_Meta_Competition\promptshield_env
-.venv\Scripts\Activate.ps1
-python -m server.app --port 8000
+cd promptshield_env
+.\.venv\Scripts\python.exe -m server.app --port 8000
 ```
 
 Check the main endpoints:
@@ -178,23 +178,21 @@ Invoke-WebRequest http://localhost:8000/schema | Select-Object -Expand Content
 Run the tests:
 
 ```powershell
-cd C:\Users\raosi\Documents\Sindhuja_Work\RL_Scaler_Meta_Competition\promptshield_env
-.venv\Scripts\Activate.ps1
-pytest
+cd promptshield_env
+.\.venv\Scripts\python.exe -m pytest
 ```
 
 Validate the local environment structure:
 
 ```powershell
-cd C:\Users\raosi\Documents\Sindhuja_Work\RL_Scaler_Meta_Competition\promptshield_env
-.venv\Scripts\Activate.ps1
-openenv validate
+cd promptshield_env
+.\.venv\Scripts\openenv.exe validate
 ```
 
 Validate a running local server:
 
 ```powershell
-openenv validate --url http://localhost:8000
+.\.venv\Scripts\openenv.exe validate --url http://localhost:8000
 ```
 
 ## Baseline Usage
@@ -202,15 +200,14 @@ openenv validate --url http://localhost:8000
 Heuristic baseline, local in-process:
 
 ```powershell
-cd C:\Users\raosi\Documents\Sindhuja_Work\RL_Scaler_Meta_Competition\promptshield_env
-.venv\Scripts\Activate.ps1
-python baseline.py --mode heuristic
+cd promptshield_env
+.\.venv\Scripts\python.exe baseline.py --mode heuristic
 ```
 
 Heuristic baseline against the running server:
 
 ```powershell
-python baseline.py --mode heuristic --base-url http://localhost:8000
+.\.venv\Scripts\python.exe baseline.py --mode heuristic --base-url http://localhost:8000
 ```
 
 Optional OpenAI baseline:
@@ -218,7 +215,7 @@ Optional OpenAI baseline:
 ```powershell
 $env:OPENAI_API_KEY="your_key_here"
 $env:OPENAI_MODEL="gpt-4o-mini"
-python baseline.py --mode openai --base-url http://localhost:8000
+.\.venv\Scripts\python.exe baseline.py --mode openai --base-url http://localhost:8000
 ```
 
 The baseline report is written to `outputs/baseline_scores.json`.
@@ -242,7 +239,7 @@ The baseline report is written to `outputs/baseline_scores.json`.
 Build the image:
 
 ```powershell
-cd C:\Users\raosi\Documents\Sindhuja_Work\RL_Scaler_Meta_Competition\promptshield_env
+cd promptshield_env
 docker build -t promptshield-env .
 ```
 
@@ -265,9 +262,8 @@ Suggested steps:
 If you prefer the OpenEnv helper after local setup is complete:
 
 ```powershell
-cd C:\Users\raosi\Documents\Sindhuja_Work\RL_Scaler_Meta_Competition\promptshield_env
-.venv\Scripts\Activate.ps1
-openenv push --repo-id YOUR_USERNAME/promptshield-env --no-interface
+cd promptshield_env
+.\.venv\Scripts\openenv.exe push --repo-id YOUR_USERNAME/promptshield-env --no-interface
 ```
 
 ## Deployment Notes
@@ -275,4 +271,3 @@ openenv push --repo-id YOUR_USERNAME/promptshield-env --no-interface
 - The environment does not require external services to grade or run.
 - The baseline endpoint defaults to deterministic heuristic mode, so it works on a public Space without secrets.
 - The OpenAI baseline mode is optional and driven by environment variables.
-
