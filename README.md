@@ -220,6 +220,22 @@ $env:OPENAI_MODEL="gpt-4o-mini"
 
 The baseline report is written to `outputs/baseline_scores.json`.
 
+## Baseline Results
+
+Verified local heuristic baseline on the full fixed dataset:
+
+- Overall average: `0.5427`
+- Easy average: `0.6867`
+- Medium average: `0.5526`
+- Hard average: `0.3889`
+
+These scores are reproducible with:
+
+```powershell
+cd promptshield_env
+.\.venv\Scripts\python.exe baseline.py --mode heuristic
+```
+
 ## Additional Endpoints
 
 - `GET /tasks`
